@@ -246,6 +246,122 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 /* category pill sliding indicator - transform-only (translateX + scaleX off a 100px base) */
 .cat-ind{position:absolute;top:0;left:0;height:40px;width:100px;border-radius:20px;background:rgba(255,106,16,.16);transform-origin:left center;transform:translateX(0) scaleX(0);transition:transform .28s cubic-bezier(.3,.8,.3,1);pointer-events:none;z-index:0}
 
+/* ==============================================================
+   MOTION PASS - transform/opacity only, all off under reduced-motion
+   ============================================================== */
+
+/* --- scroll progress rail under the header --- */
+.prog{position:fixed;top:0;left:0;height:2px;width:100%;z-index:70;transform-origin:left center;
+  transform:scaleX(0);background:linear-gradient(90deg,var(--gold),var(--pink));
+  will-change:transform;transition:transform .08s linear}
+
+/* --- age gate entrance --- */
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes crestIn{from{opacity:0;transform:scale(.86) rotate(-6deg)}to{opacity:1;transform:none}}
+.gate-logo{animation:crestIn .7s cubic-bezier(.2,.8,.25,1) both}
+.gate-q{animation:riseIn .55s ease .16s both}
+.gate-sub{animation:riseIn .55s ease .24s both}
+.gate-btns{animation:riseIn .55s ease .32s both}
+.gate-legal{animation:riseIn .55s ease .42s both}
+
+/* --- hero: orbiting ring + breathing crest --- */
+.hero-ring{position:absolute;top:50%;left:50%;width:210px;height:210px;margin:-105px 0 0 -105px;
+  border-radius:50%;pointer-events:none;z-index:1;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,106,16,.5) 60deg,transparent 130deg,
+    transparent 180deg,rgba(242,168,58,.38) 250deg,transparent 320deg);
+  -webkit-mask:radial-gradient(circle,transparent 62%,#000 64%,#000 70%,transparent 72%);
+  mask:radial-gradient(circle,transparent 62%,#000 64%,#000 70%,transparent 72%);
+  animation:spin 16s linear infinite;opacity:.85}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-logo{position:relative;z-index:2;animation:breathe 6s ease-in-out infinite}
+@keyframes breathe{
+  0%,100%{transform:translateY(0) scale(1);filter:drop-shadow(0 0 30px rgba(255,106,16,.5))}
+  50%{transform:translateY(-7px) scale(1.02);filter:drop-shadow(0 0 44px rgba(255,106,16,.72))}}
+/* drifting warm aurora behind the hero */
+.hero-glow{animation:drift 11s ease-in-out infinite}
+@keyframes drift{
+  0%,100%{transform:translateX(-50%) translateY(0) scale(1);opacity:1}
+  50%{transform:translateX(-42%) translateY(16px) scale(1.13);opacity:.78}}
+
+/* --- hero headline: word-by-word rise --- */
+.hero-h .w{display:inline-block;opacity:0;transform:translateY(18px) rotate(2deg);
+  animation:wordIn .62s cubic-bezier(.2,.85,.3,1) forwards}
+@keyframes wordIn{to{opacity:1;transform:none}}
+.hero-p,.trust{animation:riseIn .6s ease .5s both}
+.chip{opacity:0;animation:riseIn .5s ease forwards}
+.chip:nth-child(1){animation-delay:.56s}
+.chip:nth-child(2){animation-delay:.64s}
+.chip:nth-child(3){animation-delay:.72s}
+
+/* --- live dot: pulse + expanding ripple --- */
+.live i{position:relative}
+.live i::after{content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:1px solid var(--green);animation:ripple 2.1s ease-out infinite}
+@keyframes ripple{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+
+/* --- marquee: soften the edges so it reads as motion, not a slab --- */
+.marq{-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+
+/* --- section heading: rule draws itself in --- */
+.sec-hd{position:relative;padding-bottom:11px}
+.sec-hd::after{content:'';position:absolute;left:0;bottom:0;height:1px;width:100%;
+  background:linear-gradient(90deg,var(--pink),transparent 62%);
+  transform:scaleX(0);transform-origin:left center;transition:transform .7s cubic-bezier(.2,.8,.25,1) .1s}
+.sec.in .sec-hd::after,.sec-hd.drawn::after{transform:scaleX(1)}
+
+/* --- product cards: lift, image push-in, sheen sweep --- */
+.card{transition:opacity .32s ease,transform .32s ease,border-color .3s ease,box-shadow .35s ease}
+.card:hover{transform:translateY(-5px);border-color:rgba(255,106,16,.34);
+  box-shadow:0 16px 40px -18px rgba(0,0,0,.9),0 0 0 1px rgba(255,106,16,.08)}
+.card-img img{transition:transform .75s cubic-bezier(.2,.7,.3,1)}
+.card:hover .card-img img{transform:scale(1.07)}
+.card-img::after{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.30) 50%,transparent 62%);
+  transform:translateX(-120%);transition:transform .85s cubic-bezier(.25,.7,.3,1)}
+.card:hover .card-img::after{transform:translateX(120%)}
+.card-tag{animation:tagPulse 2.6s ease-in-out infinite}
+@keyframes tagPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+/* --- price rolls when the weight changes --- */
+.card-p{display:inline-block}
+.card-p.roll{animation:priceRoll .34s cubic-bezier(.2,.8,.25,1)}
+@keyframes priceRoll{0%{transform:translateY(0);opacity:1}
+  45%{transform:translateY(-9px);opacity:0}
+  46%{transform:translateY(9px)}
+  100%{transform:translateY(0);opacity:1}}
+
+/* --- flying dot from Add button to the cart tab --- */
+.fly{position:fixed;z-index:400;width:13px;height:13px;border-radius:50%;
+  background:var(--pink);box-shadow:0 0 16px rgba(255,106,16,.85);pointer-events:none;
+  will-change:transform,opacity}
+
+/* --- search focus bloom --- */
+.search{transition:border-color .22s ease,box-shadow .28s ease,transform .22s ease}
+.search:focus{box-shadow:0 0 0 3px rgba(255,106,16,.13);transform:translateY(-1px)}
+
+/* --- tab bar: active icon lifts --- */
+.tab svg{transition:transform .26s cubic-bezier(.2,.8,.25,1)}
+.tab.on svg{transform:translateY(-2px) scale(1.1)}
+
+/* --- weight pills + buttons: springier press --- */
+.sz,.cat{transition:color .16s ease,border-color .16s ease,background .16s ease,transform .16s ease}
+.sz:active,.cat:active{transform:scale(.94)}
+.btn,.card-add{will-change:transform}
+
+/* --- header crest reacts to scroll condense --- */
+.hdr-logo{transition:transform .3s cubic-bezier(.2,.8,.25,1),filter .3s ease}
+.hdr:not(.condensed) .hdr-logo:hover{transform:rotate(-8deg) scale(1.08)}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-ring,.hero-logo,.hero-glow,.card-tag,.live i::after,.gate-logo,
+  .gate-q,.gate-sub,.gate-btns,.gate-legal,.hero-p,.trust,.chip{animation:none!important}
+  .hero-h .w{opacity:1!important;transform:none!important;animation:none!important}
+  .chip{opacity:1!important}
+  .prog{display:none}
+  .sec-hd::after{transform:scaleX(1)!important}
+}
+
 @media(min-width:720px){
   .grid{grid-template-columns:repeat(4,1fr)}
   .wrap,.hdr-in,.searchwrap{max-width:1080px;margin-left:auto;margin-right:auto}
@@ -272,6 +388,8 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 </style>
 </head>
 <body>
+
+<div class="prog" id="prog"></div>
 
 <!-- ================= AGE GATE ================= -->
 <div id="gate">
@@ -324,6 +442,7 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 
   <section class="hero">
     <div class="hero-glow"></div>
+    <div class="hero-ring"></div>
     <div class="hero-in">
       <img class="hero-logo" id="hero-logo" alt="Dragonfly Packs">
       <div class="live"><i></i> Drivers Out Now</div>
@@ -528,7 +647,11 @@ document.addEventListener('click', function(e){
   var all = card.querySelectorAll('.sz');
   for (var k=0;k<all.length;k++){ all[k].classList.toggle('on', all[k] === b); }
   card.setAttribute('data-sel', i);
-  card.querySelector('.card-p').textContent = money(p.sizes[i].price);
+  var pEl = card.querySelector('.card-p');
+  if (prefersReduce()){ pEl.textContent = money(p.sizes[i].price); return; }
+  /* roll the old figure out, swap at the midpoint, roll the new one in */
+  pEl.classList.remove('roll'); void pEl.offsetWidth; pEl.classList.add('roll');
+  setTimeout(function(){ pEl.textContent = money(p.sizes[i].price); }, 150);
 });
 /* Animate cards IN only after they are in the DOM (double-rAF).
    Animating an empty container that is about to be filled causes the
@@ -618,6 +741,16 @@ function render(){
   for (var i=0;i<pills.length;i++){ pills[i].classList.toggle('on', pills[i].getAttribute('data-cat') === cat); }
   positionCatInd();
 
+  /* sections are rebuilt every render, so draw their heading rules here */
+  var heads = host.querySelectorAll('.sec-hd');
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      for (var j=0;j<heads.length;j++){
+        (function(el, n){ setTimeout(function(){ el.classList.add('drawn'); }, n * 90); })(heads[j], j);
+      }
+    });
+  });
+
   revealIn(host);
 }
 
@@ -683,6 +816,76 @@ renderReviews();
   }, { threshold:0.12, rootMargin:'0px 0px -8% 0px' });
   for (var i=0;i<secs.length;i++) io.observe(secs[i]);
 })();
+
+/* ---------- hero headline: split into words so each can rise on its own ---------- */
+(function(){
+  var h = document.querySelector('.hero-h');
+  if (!h || prefersReduce()) return;
+  var i = 0;
+  function wrap(node){
+    var out = document.createDocumentFragment();
+    Array.prototype.slice.call(node.childNodes).forEach(function(n){
+      if (n.nodeType === 3){
+        n.nodeValue.split(/(\s+)/).forEach(function(tok){
+          if (!tok) return;
+          if (/^\s+$/.test(tok)){ out.appendChild(document.createTextNode(tok)); return; }
+          var s = document.createElement('span');
+          s.className = 'w'; s.textContent = tok;
+          s.style.animationDelay = (0.18 + (i++) * 0.075) + 's';
+          out.appendChild(s);
+        });
+      } else if (n.nodeType === 1){
+        if (n.tagName === 'BR'){ out.appendChild(n.cloneNode()); return; }
+        var el = n.cloneNode(false);
+        el.appendChild(wrap(n));
+        out.appendChild(el);
+      }
+    });
+    return out;
+  }
+  var frag = wrap(h);
+  h.innerHTML = ''; h.appendChild(frag);
+})();
+
+/* ---------- scroll progress rail ---------- */
+(function(){
+  var bar = document.getElementById('prog');
+  if (!bar) return;
+  if (prefersReduce()){ bar.style.display = 'none'; return; }
+  var ticking = false;
+  function apply(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(window.scrollY / max, 1) : 0) + ')';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (ticking) return; ticking = true; requestAnimationFrame(apply);
+  }, { passive:true });
+  window.addEventListener('resize', apply);
+  apply();
+})();
+
+/* ---------- flying dot: Add button -> cart tab ---------- */
+function flyToCart(card){
+  if (prefersReduce() || !card) return;
+  var img = card.querySelector('.card-img');
+  var tgt = document.getElementById('tab-cart');
+  if (!img || !tgt) return;
+  var a = img.getBoundingClientRect(), b = tgt.getBoundingClientRect();
+  var dot = document.createElement('div');
+  dot.className = 'fly';
+  dot.style.left = (a.left + a.width/2 - 6) + 'px';
+  dot.style.top  = (a.top  + a.height/2 - 6) + 'px';
+  document.body.appendChild(dot);
+  var dx = (b.left + b.width/2) - (a.left + a.width/2);
+  var dy = (b.top  + b.height/2) - (a.top  + a.height/2);
+  dot.animate([
+    { transform:'translate(0,0) scale(1)', opacity:1 },
+    { transform:'translate(' + dx*0.55 + 'px,' + (dy*0.32 - 70) + 'px) scale(1.5)', opacity:1, offset:.55 },
+    { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.3)', opacity:0 }
+  ], { duration:640, easing:'cubic-bezier(.4,.05,.6,1)' })
+  .onfinish = function(){ dot.remove(); };
+}
 
 /* ---------- header condense on scroll (rAF-throttled) ---------- */
 (function(){
@@ -760,6 +963,7 @@ document.addEventListener('click', function(e){
   if (t.hasAttribute('data-add')){
     var pcard = t.closest('.card');
     add(t.getAttribute('data-add'), pcard ? (+pcard.getAttribute('data-sel') || 0) : 0);
+    flyToCart(pcard);
     t.textContent = 'Added';
     t.classList.add('added');
     /* confirm pop on the button (re-trigger via reflow) */
