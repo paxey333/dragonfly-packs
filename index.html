@@ -919,10 +919,29 @@ var lbVideo = document.getElementById('lb-video');
 var lbSound = document.getElementById('lb-sound');
 var lbCap   = document.getElementById('lb-cap');
 
+/* Chrome will not reliably decode a multi-megabyte data: URI in a <video>.
+   Convert it to a Blob URL once per product and reuse that. */
+var clipURLs = {};
+function clipURL(p){
+  if (clipURLs[p.id]) return clipURLs[p.id];
+  var src = p.clip;
+  if (src.slice(0,5) === 'data:'){
+    var comma = src.indexOf(',');
+    var mime  = src.slice(5, src.indexOf(';'));
+    var bin   = atob(src.slice(comma + 1));
+    var bytes = new Uint8Array(bin.length);
+    for (var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    src = URL.createObjectURL(new Blob([bytes], { type: mime }));
+  }
+  clipURLs[p.id] = src;
+  return src;
+}
+
 function openClip(id){
   var p = product(id);
   if (!p || !p.clip) return;
-  lbVideo.src = p.clip;
+  lbVideo.src = clipURL(p);
+  lbVideo.load();
   lbVideo.muted = true;
   lbSound.textContent = 'Sound On';
   lbCap.textContent = p.name + ' - ' + p.meta;
@@ -938,11 +957,7 @@ function closeClip(){
   if (!lb.classList.contains('on')) return;
   lb.classList.remove('show');
   lbVideo.pause();
-  setTimeout(function(){
-    lb.classList.remove('on');
-    lbVideo.removeAttribute('src');
-    lbVideo.load();
-  }, 260);
+  setTimeout(function(){ lb.classList.remove('on'); }, 260);
   unlockScroll();
 }
 document.addEventListener('click', function(e){
