@@ -361,7 +361,7 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
   background:var(--surface);border:1px solid var(--line);color:var(--ink);font-size:20px;line-height:1;
   display:flex;align-items:center;justify-content:center;transition:transform .18s ease,background .18s ease}
 .lb-x:hover{background:var(--pink);color:#fff;transform:rotate(90deg)}
-.lb-sound{position:absolute;bottom:12px;left:12px;font-family:var(--mono);font-size:9.5px;
+.lb-sound{position:absolute;bottom:56px;left:12px;font-family:var(--mono);font-size:9.5px;
   letter-spacing:.1em;text-transform:uppercase;background:rgba(11,11,12,.8);border:1px solid var(--line);
   border-radius:20px;padding:7px 12px;color:var(--ink)}
 .lb-sound:hover{border-color:var(--pink);color:var(--pink)}
@@ -533,7 +533,7 @@ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 <div class="lb" id="lb">
   <div class="lb-box">
     <button class="lb-x" id="lb-x" aria-label="Close video">&times;</button>
-    <video id="lb-video" playsinline loop muted preload="none"></video>
+    <video id="lb-video" playsinline loop muted controls preload="metadata"></video>
     <button class="lb-sound" id="lb-sound">Sound On</button>
     <div class="lb-cap" id="lb-cap"></div>
   </div>
